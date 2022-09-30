@@ -1,0 +1,21 @@
+{
+  "name": "get-safe-date",
+  "version": "1.0.0",
+  "description": "Used for scenarios that require verification time.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch index.js --exec node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["latest time", "encryption", "crack", "safety"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wll8/get-safe-date.git"
+  },
+
+  "author": "xw",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
