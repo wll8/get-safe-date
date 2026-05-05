@@ -16,7 +16,7 @@ Your system time just now was 2022-09-30, now you turn off the network and set i
 const { getSafeDate } = require(`get-safe-date`)
 
 new Promise(async () => {
-  const date = await getSafeDate()
+  const date = await getSafeDate({fast: true})
   console.log(`date`, date) // timestamp
 })
 ```

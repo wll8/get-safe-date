@@ -5,13 +5,21 @@ const { homedir } = os.userInfo()
 const platform = os.platform()
 const root = platform === `win32` ? homedir.match(/(.+:)/)[0] : `/`
 
-async function getSafeDate() {
+let option={
+  fast: false
+}
+
+async function getSafeDate(arg) {
+  option = {
+    ...option,
+    ...arg,
+  }
   const date = [
     tryFn(() => +fs.readFileSync(`${os.tmpdir()}/.d`), 0),
-    await netDate(),
+    !option.fast && await netDate(),
     await dirDate(),
     +new Date(),
-  ].sort((a, b) => (b - a))[0]
+  ].filter(Boolean).sort((a, b) => (b - a))[0]
   fs.writeFileSync(`${os.tmpdir()}/.d`, `${date}`)
   return date
 }
@@ -37,14 +45,14 @@ function dirDate() {
       ...baseLinux,
     ],
     win32: [
-      () => cp.execSync(`wmic logicaldisk get caption`).toString().trim().split(`\n`).slice(1).map(item => item.trim()).map(item => [`根目录`, `${item}/`]),
+      !option.fast && (() => cp.execSync(`wmic logicaldisk get caption`).toString().trim().split(`\n`).slice(1).map(item => item.trim()).map(item => [`根目录`, `${item}/`])),
       () => [[`home 目录`, homedir]],
       () => [[`临时`, os.tmpdir()]],
       () => [[`程序数据`, process.env.LOCALAPPDATA]],
       () => [[`x64 程序`, `${root}/Program Files/`]],
       () => [[`x32 程序`, `${root}/Program Files (x86)/`]],
       () => [[`预读`, `${root}/Windows/Prefetch/`]],
-    ],
+    ].filter(Boolean),
   }
   const dirList = platformMap[platform] || platformMap[`linux`]
   const list = dirList.map(item => tryFn(item, []))

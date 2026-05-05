@@ -1,6 +1,8 @@
 const { getSafeDate } = require(`./index.js`)
 
 new Promise(async () => {
-  const date = await getSafeDate()
+  console.time(`safe`)
+  const date = await getSafeDate({fast: true})
   console.log(`date`, date)
+  console.timeEnd(`safe`)
 })
